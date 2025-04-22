@@ -1,8 +1,9 @@
 import { useControllableValue } from "ahooks";
 import { memo, useState } from "react";
-import { Editor, FileModel } from "./Editor";
-import { FileTree } from "./FileTree";
-import { classNames } from "../utils/classNames";
+import { Editor, FileModel } from "../Editor/Editor";
+import { FileTree } from "../FileTree/FileTree";
+import { classNames } from "../../utils/classNames";
+import { useMonacoInit } from "../Editor/useMonacoInit";
 
 export interface CodeProps {
   rootPath?: string;
@@ -17,7 +18,11 @@ export const Code = memo(function Code(props: CodeProps) {
     defaultValue: [],
   });
 
-  const [selectedModelPath, setSelectedModelPath] = useState<string>();
+  const [selectedModelPath, setSelectedModelPath] = useState<string>(
+    models[0]?.path ?? ""
+  );
+
+  const monaco = useMonacoInit();
 
   const selectedModel = models?.find(
     (model) => model.path === selectedModelPath
@@ -25,7 +30,7 @@ export const Code = memo(function Code(props: CodeProps) {
 
   const editor = selectedModel ? (
     <Editor
-      className={classNames("items-stretch")}
+      className={classNames("items-stretch flex-1")}
       path={selectedModel.path}
       value={selectedModel.value}
       language={selectedModel.type}
@@ -41,6 +46,10 @@ export const Code = memo(function Code(props: CodeProps) {
       }}
     />
   ) : null;
+
+  if (!monaco) {
+    return null;
+  }
 
   return (
     <div className="flex h-[800px]">

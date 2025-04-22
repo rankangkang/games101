@@ -1,7 +1,13 @@
-import { memo, useCallback, useMemo, useState } from "react";
-import { FileModel } from "./Editor";
-import { getExtName } from "../utils/ext";
-import { classNames } from "../utils/classNames";
+import {
+  memo,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
+import { FileModel } from "../Editor/Editor";
+import { getExtName } from "../../utils/ext";
+import { classNames } from "../../utils/classNames";
 
 interface FileTreeProps {
   rootPath?: string;
@@ -68,6 +74,20 @@ export const FileTree = memo(function FileTree({
 
     return root;
   }, [models, rootPath]);
+
+  useLayoutEffect(() => {
+    function traverse(node: TreeNode) {
+      if (node.type === "directory") {
+        console.log("traverse", node.path);
+        expandedPaths.add(node.path);
+      }
+      node.children.forEach(traverse);
+    }
+
+    // 初始，展开所有目录
+    traverse(tree);
+    setExpandedPaths(new Set(expandedPaths));
+  }, []);
 
   const renderNode = useCallback(
     (node: TreeNode, level: number = 0) => {

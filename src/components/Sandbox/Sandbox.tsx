@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 interface SandboxProps {
-  html: string;
+  html?: string;
   styles?: string | string[];
   scripts?: string | string[];
   width?: string | number;
