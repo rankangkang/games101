@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from "react";
-
+import { generateFullHtml } from "./utils";
 interface SandboxProps {
+  // 直接指定 html 内容，该属性传递时，styles、scripts 内容会被忽略
+  importMap?: string;
+
+  // 其他内容
   html?: string;
   styles?: string | string[];
   scripts?: string | string[];
@@ -22,6 +26,7 @@ const Sandbox: React.FC<SandboxProps> = (props: SandboxProps) => {
     title = "Sandbox",
     className,
     style,
+    importMap = "",
   } = props;
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -31,20 +36,52 @@ const Sandbox: React.FC<SandboxProps> = (props: SandboxProps) => {
 
     const iframe = iframeRef.current;
     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-
     if (!iframeDoc) return;
 
-    const fullHtml = generateFullHtml({
-      html,
-      styles,
-      scripts,
-      title,
-      importmap,
-    });
+    const nextHtml = html
+      ? html
+      : generateFullHtml({
+          html,
+          title,
+        });
+
+    const parser = new DOMParser();
+    const nextDoc = parser.parseFromString(nextHtml, "text/html");
+    const head = nextDoc.head;
+    if (importMap) {
+      // 插入 importmap
+      const importMapTag = document.createElement("script");
+      importMapTag.type = "importmap";
+      importMapTag.innerHTML = importMap;
+      head.appendChild(importMapTag);
+    }
+
+    if (styles.length) {
+      // 添加样式到 head 中
+      const styleList = Array.isArray(styles) ? styles : [styles];
+      styleList.forEach((style) => {
+        const styleTag = document.createElement("style");
+        styleTag.innerHTML = style;
+        head.appendChild(styleTag);
+      });
+    }
+
+    if (scripts.length) {
+      // 添加脚本到 body 中
+      const scriptList = Array.isArray(scripts) ? scripts : [scripts];
+      scriptList.forEach((script) => {
+        const scriptTag = document.createElement("script");
+        scriptTag.type = "module";
+        scriptTag.innerHTML = script;
+        nextDoc.body.appendChild(scriptTag);
+      });
+    }
+
     iframeDoc.open();
-    iframeDoc.write(fullHtml);
+    iframeDoc.write(nextDoc.documentElement.outerHTML);
+
     iframeDoc.close();
-  }, [html, styles, scripts, title]);
+  }, [html, styles, scripts, title, importMap]);
 
   return (
     <iframe
@@ -60,51 +97,3 @@ const Sandbox: React.FC<SandboxProps> = (props: SandboxProps) => {
 };
 
 export default Sandbox;
-
-const importmap = {
-  imports: {
-    three: "https://esm.sh/three@0.175.0",
-    "three/": "https://esm.sh/three@0.175.0/",
-  },
-};
-
-function generateFullHtml(
-  config: {
-    html?: string;
-    styles?: string | string[];
-    scripts?: string | string[];
-    title?: string;
-    importmap?: Record<string, unknown>;
-  } = {}
-) {
-  const { html, styles, scripts, title = "Sandbox", importmap } = config;
-
-  const scriptList = Array.isArray(scripts) ? scripts : [scripts];
-  const scriptContent = scriptList
-    .map((script) => `<script type="module">${script}</script>`)
-    .join("\n");
-
-  const importmapContent = importmap
-    ? `<script type="importmap">${JSON.stringify(importmap)}</script>`
-    : "";
-
-  const stylesList = Array.isArray(styles) ? styles : [styles];
-  const stylesContent = stylesList
-    .map((style) => `<style>${style}</style>`)
-    .join("\n");
-
-  return `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title}</title>
-    ${stylesContent}
-    ${importmapContent}
-  </head>
-  <body>
-    ${html}
-    ${scriptContent}
-  </body>
-</html>`;
-}

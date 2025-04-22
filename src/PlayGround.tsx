@@ -3,12 +3,27 @@ import { useMemo, useState } from "react";
 import { Code } from "./components/Code/Code";
 import { FileModel } from "./components/Editor/Editor";
 import Sandbox from "./components/Sandbox/Sandbox";
+import { generateImportMap } from "./components/Sandbox/utils";
 
-const gameHtml = /* html */ `<div id="game-container">
-</div>`;
+const gameHtml = /* html */ `
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Game</title>
+  </head>
+  <body>
+    <div id="game-container"></div>
+    <script type="text/javascript">
+      console.log('run js');
+    </script>
+    <script type="module">
+      import './main.js'
+    </script>
+  </body>
+</html>
+`;
 
 const gameJs = /* javascript */ `
-// 使用 three.js 创建一个 3D 场景, 并添加一个立方体,绘制到 game-canvas 上
 import { Scene, PerspectiveCamera, BoxGeometry, MeshBasicMaterial, Mesh, WebGLRenderer } from 'three';
 
 const scene = new Scene();
@@ -44,11 +59,16 @@ export function PlayGround() {
     };
   }, [models]);
 
+  const importMap = generateImportMap(
+    models.filter((item) => item.type === "javascript")
+  )
+
   return (
     <div>
       <Sandbox
         className="w-full h-[300px]"
         html={html}
+        importMap={importMap}
         scripts={js}
         styles={css}
       />

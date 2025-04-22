@@ -48,4 +48,5 @@ export interface FileModel {
   path: string;
   value: string;
   type: "javascript" | "html" | "css";
+  isModule?: boolean;
 }
