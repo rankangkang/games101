@@ -101,7 +101,7 @@ function generateFullHtml(
     <title>${title}</title>
     ${stylesContent}
     ${importmapContent}
-  </head> 
+  </head>
   <body>
     ${html}
     ${scriptContent}
