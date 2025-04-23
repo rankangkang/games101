@@ -14,6 +14,9 @@ export interface CodeProps {
   models?: FileModel[];
   onModelChange?: (models: FileModel[]) => void;
   renderHeader?: () => React.ReactNode;
+
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Code = memo(function Code(props: CodeProps) {
@@ -69,7 +72,7 @@ export const Code = memo(function Code(props: CodeProps) {
   }
 
   return (
-    <div className="flex justify-stretch">
+    <div className={classNames("flex", props.className)} style={props.style}>
       <div className="w-64 flex flex-col">
         {props.renderHeader?.()}
         <FileTree

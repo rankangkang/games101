@@ -63,7 +63,7 @@ self.addEventListener("fetch", (event) => {
           console.log("Returning cached response for:", event.request.url);
           return new Response(value.value, {
             headers: {
-              "Content-Type": value.type,
+              "Content-Type": value.type || "text/plain",
             },
           });
         } else {

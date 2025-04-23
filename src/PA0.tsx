@@ -9,9 +9,7 @@ import { getStoragePath } from "./utils/path";
 let modelPromise: Promise<FileModel[]> | null = null;
 
 export function PA0() {
-  modelPromise =
-    modelPromise ??
-    getModels(defaultModels.map((model) => getStoragePath(model.path)));
+  modelPromise = modelPromise ?? getModels(defaultModels);
 
   useEffect(
     () => () => {
@@ -22,9 +20,7 @@ export function PA0() {
 
   const models = use(modelPromise);
 
-  // indexedDB 中可能存在已由内容，若存在，则使用已有的内容
-
-  return <Playground models={models} />;
+  return <Playground models={models.filter(Boolean)} />;
 }
 
 const defaultModels: FileModel[] = [
@@ -40,11 +36,16 @@ const defaultModels: FileModel[] = [
   },
 ];
 
-async function getModels(keys: string[]) {
+async function getModels(models: FileModel[]) {
   return Promise.all(
-    keys.map(async (key) => {
-      const model = await idb.getFileModel(key);
-      return model!;
+    models.map(async (item) => {
+      const key = getStoragePath(item.path);
+      let model = await idb.getFileModel(key);
+      if (!model) {
+        model = item;
+        await idb.setFileModel(key, model);
+      }
+      return model;
     })
   );
 }
