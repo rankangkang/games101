@@ -35,8 +35,6 @@ export function Playground(props: PlaygroundProps) {
   };
 
   const handleSave = async (nextModels: FileModel[]) => {
-    console.log("handleSave");
-    // models 变化时，更新 idb
     const promises = nextModels.map((model) => {
       const key = getStoragePath(model.path);
       return idb.setFileModel(key, model);
@@ -58,23 +56,30 @@ export function Playground(props: PlaygroundProps) {
         onModelChange={handleSave}
         renderHeader={() => {
           return (
-            <div className="flex justify-center gap-6 bg-[#262626]">
-              <div
-                className="p-[4px] cursor-pointer hover:bg-[#333440] rounded-[4px] w-[36px] h-[36px] flex items-center justify-center"
-                onClick={() => handleSave(models)}
-              >
-                💾
-              </div>
-              <div
-                className="p-[4px] cursor-pointer hover:bg-[#333440] rounded-[4px] w-[36px] h-[36px] flex items-center justify-center"
-                onClick={handleRun}
-              >
-                ▶️
-              </div>
-            </div>
+            <ToolBar onSave={() => handleSave(models)} onRun={handleRun} />
           );
         }}
       />
     </div>
   );
 }
+
+const ToolBar = (props: { onSave: () => void; onRun: () => void }) => {
+  const { onSave, onRun } = props;
+  return (
+    <div className="flex justify-center gap-6 bg-[#262626] text-[14px]">
+      <div
+        className="p-[2px] cursor-pointer hover:bg-[#333440] rounded-[4px] w-[32px] h-[32px] flex items-center justify-center"
+        onClick={onSave}
+      >
+        💾
+      </div>
+      <div
+        className="p-[2px] cursor-pointer hover:bg-[#333440] rounded-[4px] w-[32px] h-[32px] flex items-center justify-center"
+        onClick={onRun}
+      >
+        ▶️
+      </div>
+    </div>
+  );
+};

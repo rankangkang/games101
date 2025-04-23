@@ -1,7 +1,7 @@
 import { memo, useCallback, useLayoutEffect, useMemo, useState } from "react";
-import { getExtName } from "../../utils/ext";
 import { classNames } from "../../utils/classNames";
 import { FileModel } from "../../types";
+import { getFileIcon } from "../utils";
 
 interface FileTreeProps {
   rootPath?: string;
@@ -70,6 +70,7 @@ export const FileTree = memo(function FileTree({
   }, [models, rootPath]);
 
   useLayoutEffect(() => {
+    const expandedPaths = new Set<string>();
     function traverse(node: TreeNode) {
       if (node.type === "directory" || node.type === "root") {
         expandedPaths.add(node.path);
@@ -169,25 +170,7 @@ const FileIcon = ({ type, name }: { type: TreeNode["type"]; name: string }) => {
   const getIcon = () => {
     if (type === "root") return "🌳";
     if (type === "directory") return "📁";
-    const ext = getExtName(name);
-    switch (ext) {
-      case "html":
-        return "🌐";
-      case "css":
-        return "🎨";
-      case "js":
-      case "ts":
-        return "📜";
-      case "jsx":
-      case "tsx":
-        return "⚛️";
-      case "json":
-        return "📋";
-      case "md":
-        return "📝";
-      default:
-        return "📄";
-    }
+    return getFileIcon(name);
   };
 
   return (
