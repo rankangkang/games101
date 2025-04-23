@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Game</title>
+</head>
+
+<body>
+  <div id="game-container"></div>
+  <!-- <script type="module">
+    function join(...paths) {
+      return paths.join("/").replace(/\/+/g, "/");
+    }
+
+    // 注入一个全局函数，重写 script 标签的 src 属性
+    window.rewriteUri = function (src) {
+      const prefix = ''
+      return join(prefix, src);
+    }
+  </script> -->
+  
+  <script type="module" src="/sw/main.js"></script>
+</body>
+
+</html>

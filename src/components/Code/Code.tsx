@@ -1,14 +1,16 @@
 import { useControllableValue } from "ahooks";
 import { memo, useState } from "react";
-import { Editor, FileModel } from "../Editor/Editor";
+import { Editor } from "../Editor/Editor";
 import { FileTree } from "../FileTree/FileTree";
 import { classNames } from "../../utils/classNames";
 import { useMonacoInit } from "../Editor/useMonacoInit";
-
+import { FileModel } from "../../types";
+import { mime2Lang } from "../../utils/ext";
 export interface CodeProps {
   rootPath?: string;
   models?: FileModel[];
   onModelChange?: (models: FileModel[]) => void;
+  renderHeader?: () => React.ReactNode;
 }
 
 export const Code = memo(function Code(props: CodeProps) {
@@ -33,7 +35,7 @@ export const Code = memo(function Code(props: CodeProps) {
       className={classNames("items-stretch flex-1")}
       path={selectedModel.path}
       value={selectedModel.value}
-      language={selectedModel.type}
+      language={mime2Lang(selectedModel.type)}
       onChange={(val) => {
         setModels((models) => {
           return models.map((model) => {
@@ -53,12 +55,15 @@ export const Code = memo(function Code(props: CodeProps) {
 
   return (
     <div className="flex h-[800px]">
-      <FileTree
-        className="w-64"
-        models={models}
-        selectedPath={selectedModelPath}
-        onSelect={setSelectedModelPath}
-      />
+      <div className="w-64 flex flex-col">
+        {props.renderHeader?.()}
+        <FileTree
+          className="min-w-fit flex-1"
+          models={models}
+          selectedPath={selectedModelPath}
+          onSelect={setSelectedModelPath}
+        />
+      </div>
       {editor}
     </div>
   );

@@ -43,10 +43,3 @@ export const Editor = memo(function Editor(props: EditorProps) {
     </div>
   );
 });
-
-export interface FileModel {
-  path: string;
-  value: string;
-  type: "javascript" | "html" | "css";
-  isModule?: boolean;
-}

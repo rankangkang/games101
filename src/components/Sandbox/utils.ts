@@ -1,6 +1,6 @@
 import { defaultImportMap } from "../../config";
 import { join } from "../../utils/path";
-import { FileModel } from "../Editor/Editor";
+import { FileModel } from "../../types";
 
 export function generateImportMap(
   importMapScripts: FileModel[],
