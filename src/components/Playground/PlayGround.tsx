@@ -22,9 +22,7 @@ export function Playground(props: PlaygroundProps) {
   );
 
   const sandboxRef = useRef<{ forceUpdate: () => void }>({
-    forceUpdate: () => {
-      console.log("forceUpdate1");
-    }
+    forceUpdate: () => {},
   });
 
   const importMap = generateImportMap([]);
@@ -60,7 +58,7 @@ export function Playground(props: PlaygroundProps) {
         onModelChange={handleSave}
         renderHeader={() => {
           return (
-            <div className="flex justify-center gap-6 bg-[#262626] border-b">
+            <div className="flex justify-center gap-6 bg-[#262626]">
               <div
                 className="p-[4px] cursor-pointer hover:bg-[#333440] rounded-[4px] w-[36px] h-[36px] flex items-center justify-center"
                 onClick={() => handleSave(models)}

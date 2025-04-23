@@ -1,13 +1,7 @@
-import {
-  memo,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
-import { FileModel } from "../Editor/Editor";
+import { memo, useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { getExtName } from "../../utils/ext";
 import { classNames } from "../../utils/classNames";
+import { FileModel } from "../../types";
 
 interface FileTreeProps {
   rootPath?: string;
@@ -45,7 +39,7 @@ export const FileTree = memo(function FileTree({
     const root: TreeNode = {
       name: rootPath,
       path: "",
-      type: "directory",
+      type: "root",
       children: [],
     };
 
@@ -77,8 +71,7 @@ export const FileTree = memo(function FileTree({
 
   useLayoutEffect(() => {
     function traverse(node: TreeNode) {
-      if (node.type === "directory") {
-        console.log("traverse", node.path);
+      if (node.type === "directory" || node.type === "root") {
         expandedPaths.add(node.path);
       }
       node.children.forEach(traverse);
@@ -102,7 +95,7 @@ export const FileTree = memo(function FileTree({
         <div key={node.path}>
           <div
             onClick={() => {
-              if (node.type === "directory") {
+              if (node.type === "directory" || node.type === "root") {
                 toggleExpand(node.path);
               } else {
                 onSelect(node.path);
@@ -113,9 +106,10 @@ export const FileTree = memo(function FileTree({
               userSelect: "none",
             }}
             className={classNames(
-              "hover:!bg-[#35363E] hover:cursor-pointer",
+              "hover:bg-[#35363E] hover:cursor-pointer",
               "flex items-center px-[8px] py-[4px]",
-              isSelected && "!bg-[#35363E]"
+              isSelected && "!bg-[#35363E]",
+              node.type === "root" && "!text-[#F6F6F4] !font-bold !bg-[#292A35]"
             )}
           >
             {hasChildren ? (
@@ -166,21 +160,15 @@ export const FileTree = memo(function FileTree({
 interface TreeNode {
   name: string;
   path: string;
-  type: "file" | "directory";
+  type: "file" | "directory" | "root";
   children: TreeNode[];
 }
 
 // VSCode 风格的图标组件
-const FileIcon = ({
-  type,
-  name,
-}: {
-  type: "file" | "directory";
-  name: string;
-}) => {
+const FileIcon = ({ type, name }: { type: TreeNode["type"]; name: string }) => {
   const getIcon = () => {
+    if (type === "root") return "🌳";
     if (type === "directory") return "📁";
-
     const ext = getExtName(name);
     switch (ext) {
       case "html":

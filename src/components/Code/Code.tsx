@@ -54,7 +54,7 @@ export const Code = memo(function Code(props: CodeProps) {
   }
 
   return (
-    <div className="flex h-[800px]">
+    <div className="flex">
       <div className="w-64 flex flex-col">
         {props.renderHeader?.()}
         <FileTree
