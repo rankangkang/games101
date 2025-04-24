@@ -53,38 +53,38 @@ export function Playground(props: PlaygroundProps) {
   };
 
   return (
-    <div className="flex flex-col w-full h-[800px]">
-      <PanelGroup
-        direction="horizontal"
-        className="w-full h-[calc(100vh-120px)]"
+    <PanelGroup direction="horizontal" className="w-full h-full">
+      <Panel
+        ref={editorPanelRef}
+        defaultSize={50}
+        minSize={20}
+        className="w-full h-full border border-[#343434] rounded-sm shadow-lg"
       >
-        <Panel ref={editorPanelRef} defaultSize={50} minSize={20}>
-          <Code
-            className="w-full h-full"
-            models={models}
-            onModelChange={handleSave}
-            renderHeader={() => {
-              return (
-                <ToolBar onSave={() => handleSave(models)} onRun={handleRun} />
-              );
-            }}
-          />
-        </Panel>
+        <Code
+          className="w-full h-full"
+          models={models}
+          onModelChange={handleSave}
+          renderHeader={() => {
+            return (
+              <ToolBar onSave={() => handleSave(models)} onRun={handleRun} />
+            );
+          }}
+        />
+      </Panel>
 
-        <PanelResizeHandle className="w-2 bg-[#333440] hover:bg-[#4a4a5e] cursor-col-resize flex items-center justify-center">
-          <div className="w-[4px] h-10 bg-gray-500 rounded-full"></div>
-        </PanelResizeHandle>
+      <PanelResizeHandle className="w-2 bg-[#262626] hover:bg-[#4a4a5e] cursor-col-resize flex items-center justify-center rounded-[4px]">
+        <div className="w-[4px] h-10 bg-gray-500 rounded-full"></div>
+      </PanelResizeHandle>
 
-        <Panel ref={previewPanelRef} defaultSize={50} minSize={20}>
-          <Sandbox
-            ref={sandboxRef}
-            className="w-full h-full"
-            html={entry}
-            importMap={importMap}
-          />
-        </Panel>
-      </PanelGroup>
-    </div>
+      <Panel
+        ref={previewPanelRef}
+        defaultSize={50}
+        minSize={20}
+        className="w-full h-full border border-[#343434] rounded-sm shadow-lg"
+      >
+        <Sandbox ref={sandboxRef} html={entry} importMap={importMap} />
+      </Panel>
+    </PanelGroup>
   );
 }
 

@@ -5,10 +5,10 @@ export function registryServiceWorker(path: string) {
         scope: "/",
       })
       .then((registration) => {
-        console.log("ServiceWorker 注册成功:", registration.scope);
+        console.log("ServiceWorker registered", registration.scope);
       })
       .catch((error) => {
-        console.log("ServiceWorker 注册失败:", error);
+        console.log("ServiceWorker registration failed", error);
       });
   }
   return Promise.resolve();

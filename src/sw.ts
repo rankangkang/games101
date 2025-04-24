@@ -20,12 +20,6 @@ self.addEventListener("activate", (event) => {
   console.log("Service Worker activated");
   // 立即接管所有客户端，不等待刷新
   event.waitUntil(self.clients.claim());
-
-  event.waitUntil(
-    idb.getDB().then(() => {
-      console.log("service worker db init success");
-    })
-  );
 });
 
 // 监听 fetch 事件

@@ -91,7 +91,6 @@ const Sandbox: React.FC<SandboxProps> = (props: SandboxProps) => {
       height={height}
       srcDoc={fullHtml}
       sandbox="allow-scripts allow-same-origin allow-modals allow-popups allow-presentation"
-      allow={"serviceworker"}
     />
   );
 };
