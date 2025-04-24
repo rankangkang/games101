@@ -1,3 +1,6 @@
 @import "tailwindcss";
 
 /* Add any custom styles that can't be handled by Tailwind here */
+#root {
+  height: 100vh;
+}

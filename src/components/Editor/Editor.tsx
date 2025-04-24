@@ -1,6 +1,7 @@
 import { memo } from "react";
 import Monaco, { OnChange } from "@monaco-editor/react";
 import { classNames } from "../../utils/classNames";
+import { SupportedLanguage } from "../../types";
 
 export interface EditorProps {
   defaultValue?: string;
@@ -8,8 +9,8 @@ export interface EditorProps {
   value?: string;
   onChange?: OnChange;
 
-  language?: "javascript" | "html" | "css";
-  defaultLanguage?: "javascript" | "html" | "css";
+  language?: SupportedLanguage;
+  defaultLanguage?: SupportedLanguage;
 
   className?: string;
   style?: React.CSSProperties;

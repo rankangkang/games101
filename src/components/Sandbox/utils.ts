@@ -1,13 +1,9 @@
-import { defaultImportMap } from "../../config";
 import { join } from "../../utils/path";
 import { FileModel } from "../../types";
 
-export function generateImportMap(
-  importMapScripts: FileModel[],
-  baseUrl = "./"
-) {
+export function generateImportMap(importMapScripts: FileModel[]) {
   const importList = importMapScripts.map((script) => ({
-    name: join(baseUrl, script.path),
+    name: join(script.baseUrl, script.path),
     url: URL.createObjectURL(
       new Blob([script.value], { type: "text/javascript" })
     ),
@@ -20,8 +16,6 @@ export function generateImportMap(
     },
     { imports: {} } as { imports: Record<string, string> }
   );
-
-  Object.assign(importMap.imports, defaultImportMap.imports);
 
   return JSON.stringify(importMap);
 }

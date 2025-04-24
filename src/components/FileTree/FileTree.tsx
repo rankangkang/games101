@@ -38,7 +38,7 @@ export const FileTree = memo(function FileTree({
   const tree = useMemo(() => {
     const root: TreeNode = {
       name: rootPath,
-      path: "",
+      path: rootPath,
       type: "root",
       children: [],
     };
@@ -168,7 +168,7 @@ interface TreeNode {
 // VSCode 风格的图标组件
 const FileIcon = ({ type, name }: { type: TreeNode["type"]; name: string }) => {
   const getIcon = () => {
-    if (type === "root") return "🌳";
+    if (type === "root") return "🗂️";
     if (type === "directory") return "📁";
     return getFileIcon(name);
   };

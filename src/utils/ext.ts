@@ -1,4 +1,4 @@
-import { MimeType } from "../types";
+import { MimeType, SupportedLanguage } from "../types";
 
 export function getExtName(path: string) {
   const lastDotIndex = path.lastIndexOf(".");
@@ -9,14 +9,17 @@ export function getExtName(path: string) {
   return path.slice(lastDotIndex + 1);
 }
 
-export function mime2Lang(mime: MimeType) {
+export function mime2Lang(mime: MimeType): SupportedLanguage | undefined {
   switch (mime) {
     case MimeType.JavaScript:
-      return "javascript";
+      return SupportedLanguage.JavaScript;
     case MimeType.HTML:
-      return "html";
+      return SupportedLanguage.HTML;
     case MimeType.CSS:
-      return "css";
+      return SupportedLanguage.CSS;
+    case MimeType.ImportMap:
+    case MimeType.JSON:
+      return SupportedLanguage.JSON;
     default:
       return undefined;
   }

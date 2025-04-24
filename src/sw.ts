@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-import { SERVICE_WORKER_SCOPE_PREFIX } from "./config";
+import { ASSIGNMENTS_BASE_PREFIX } from "./config";
 import { idb } from "./db";
 
 declare const self: ServiceWorkerGlobalScope;
@@ -33,7 +33,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   const pathname = url.pathname;
 
-  if (!pathname.startsWith(SERVICE_WORKER_SCOPE_PREFIX)) {
+  if (!pathname.startsWith(ASSIGNMENTS_BASE_PREFIX)) {
     return;
   }
 

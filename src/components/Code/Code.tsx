@@ -13,10 +13,10 @@ export interface CodeProps {
   rootPath?: string;
   models?: FileModel[];
   onModelChange?: (models: FileModel[]) => void;
-  renderHeader?: () => React.ReactNode;
-
+  sidebar?: (() => React.ReactNode) | React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  treeVisible?: boolean;
 }
 
 export const Code = memo(function Code(props: CodeProps) {
@@ -73,15 +73,19 @@ export const Code = memo(function Code(props: CodeProps) {
 
   return (
     <div className={classNames("flex", props.className)} style={props.style}>
-      <div className="w-64 flex flex-col">
-        {props.renderHeader?.()}
-        <FileTree
-          className="min-w-fit flex-1"
-          models={models}
-          selectedPath={selectedModelPath}
-          onSelect={handleSelectModel}
-        />
-      </div>
+      <Condition if={props.sidebar}>{props.sidebar}</Condition>
+      <Condition if={props.treeVisible}>
+        <div className="w-64 flex flex-col">
+          <FileTree
+            rootPath={props.rootPath}
+            className="min-w-fit flex-1"
+            models={models}
+            selectedPath={selectedModelPath}
+            onSelect={handleSelectModel}
+          />
+        </div>
+      </Condition>
+
       <div className="flex flex-col flex-1 justify-stretch bg-[#292A35]">
         <TabList
           models={openedModels}

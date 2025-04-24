@@ -1,9 +1,8 @@
 // 组合 编辑器 和 游戏
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Code } from "../Code/Code";
-import { generateImportMap } from "../Sandbox/utils";
 import { idb } from "../../db";
-import { getStoragePath } from "../../utils/path";
+import { join } from "../../utils/path";
 import { FileModel, MimeType } from "../../types";
 import Sandbox from "../Sandbox/Sandbox";
 import {
@@ -12,13 +11,17 @@ import {
   PanelResizeHandle,
   ImperativePanelHandle,
 } from "react-resizable-panels";
+import { Sidebar } from "../Sidebar/Sidebar";
+import { getSidebarConfig } from "../../router/sidebarConfig";
+import { useMemoizedFn } from "ahooks";
 
 export interface PlaygroundProps {
+  baseUrl?: string;
   models: FileModel[];
 }
 
 export function Playground(props: PlaygroundProps) {
-  const { models: initialModels } = props;
+  const { models: initialModels, baseUrl = "" } = props;
 
   // 存储中间态，点击运行时，将中间态存储到 idb，然后更新 sandbox
   const [models, setModels] = useState<FileModel[]>(initialModels);
@@ -33,24 +36,50 @@ export function Playground(props: PlaygroundProps) {
 
   const previewPanelRef = useRef<ImperativePanelHandle>(null);
   const editorPanelRef = useRef<ImperativePanelHandle>(null);
+  const [treePanelVisible, setTreePanelVisible] = useState(false);
 
-  const importMap = generateImportMap([]);
-
-  const handleRun = async () => {
+  const handleRun = useMemoizedFn(async () => {
     // 更新 sandbox 内容
     const html = models.find((model) => model.type === MimeType.HTML)?.value;
     setEntry(html);
     sandboxRef.current.forceUpdate();
-  };
+  });
 
-  const handleSave = async (nextModels: FileModel[]) => {
+  const handleSave = useMemoizedFn(async (nextModels: FileModel[]) => {
     const promises = nextModels.map((model) => {
-      const key = getStoragePath(model.path);
+      const key = join(baseUrl, model.path);
       return idb.setFileModel(key, model);
     });
     await Promise.all(promises);
     setModels(nextModels);
-  };
+  });
+
+  const sidebarConfig = useMemo(() => {
+    const config = getSidebarConfig();
+    config.top.unshift(
+      {
+        id: "project",
+        title: "Project",
+        icon: "🗂️",
+        onClick: () => {
+          setTreePanelVisible((prev) => !prev);
+        },
+      },
+      {
+        id: "run",
+        title: "Run",
+        icon: "▶️",
+        onClick: handleRun,
+      },
+      {
+        id: "save",
+        title: "Save",
+        icon: "💾",
+        onClick: () => handleSave(models),
+      }
+    );
+    return config;
+  }, [models, handleRun, handleSave]);
 
   return (
     <PanelGroup direction="horizontal" className="w-full h-full">
@@ -61,13 +90,13 @@ export function Playground(props: PlaygroundProps) {
         className="w-full h-full border border-[#343434] rounded-sm shadow-lg"
       >
         <Code
+          rootPath={baseUrl}
           className="w-full h-full"
           models={models}
           onModelChange={handleSave}
-          renderHeader={() => {
-            return (
-              <ToolBar onSave={() => handleSave(models)} onRun={handleRun} />
-            );
+          treeVisible={treePanelVisible}
+          sidebar={() => {
+            return <Sidebar config={sidebarConfig} />;
           }}
         />
       </Panel>
@@ -82,28 +111,8 @@ export function Playground(props: PlaygroundProps) {
         minSize={20}
         className="w-full h-full border border-[#343434] rounded-sm shadow-lg"
       >
-        <Sandbox ref={sandboxRef} html={entry} importMap={importMap} />
+        <Sandbox ref={sandboxRef} html={entry} />
       </Panel>
     </PanelGroup>
   );
 }
-
-const ToolBar = (props: { onSave: () => void; onRun: () => void }) => {
-  const { onSave, onRun } = props;
-  return (
-    <div className="flex justify-center gap-6 bg-[#262626] text-[14px]">
-      <div
-        className="p-[2px] cursor-pointer hover:bg-[#333440] rounded-[4px] w-[32px] h-[32px] flex items-center justify-center"
-        onClick={onSave}
-      >
-        💾
-      </div>
-      <div
-        className="p-[2px] cursor-pointer hover:bg-[#333440] rounded-[4px] w-[32px] h-[32px] flex items-center justify-center"
-        onClick={onRun}
-      >
-        ▶️
-      </div>
-    </div>
-  );
-};

@@ -1,8 +1,7 @@
 import { IDB_OPTIONS } from "../config";
 import { FileModel } from "../types";
-import { getStoragePath } from "../utils/path";
 import { IDBStore } from "./idb";
-
+import { join } from "../utils/path";
 export const idb = new IDBStore(IDB_OPTIONS);
 
 /**
@@ -13,7 +12,7 @@ export const idb = new IDBStore(IDB_OPTIONS);
 export async function syncFileModels(defaultModels: FileModel[]) {
   return Promise.all(
     defaultModels.map(async (item) => {
-      const key = getStoragePath(item.path);
+      const key = join(item.baseUrl, item.path);
       let model = await idb.getFileModel(key);
       if (!model) {
         model = item;
