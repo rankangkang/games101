@@ -1,26 +1,26 @@
 // 组合 编辑器 和 游戏
 import { useMemo, useRef, useState } from "react";
-import { Code } from "../Code/Code";
+import { Code } from "./Code/Code";
 import { idb } from "../../db";
 import { join } from "../../utils/path";
 import { FileModel, MimeType } from "../../types";
-import Sandbox from "../Sandbox/Sandbox";
+import Sandbox from "./Sandbox/Sandbox";
 import {
   Panel,
   PanelGroup,
   PanelResizeHandle,
   ImperativePanelHandle,
 } from "react-resizable-panels";
-import { Sidebar } from "../Sidebar/Sidebar";
+import { Sidebar } from "./Code/Sidebar";
 import { getSidebarConfig } from "../../router/sidebarConfig";
 import { useMemoizedFn } from "ahooks";
 
-export interface PlaygroundProps {
+export interface CodeSandboxProps {
   baseUrl?: string;
   models: FileModel[];
 }
 
-export function Playground(props: PlaygroundProps) {
+export function CodeSandbox(props: CodeSandboxProps) {
   const { models: initialModels, baseUrl = "" } = props;
 
   // 存储中间态，点击运行时，将中间态存储到 idb，然后更新 sandbox

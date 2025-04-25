@@ -1,3 +1,5 @@
+import { OnMount } from "@monaco-editor/react";
+
 export interface FileModel {
   path: string;
   value: string;
@@ -11,7 +13,7 @@ export enum MimeType {
   CSS = "text/css",
   ImportMap = "application/importmap+json",
   JSON = "application/json",
-  Markdown = "text/markdown"
+  Markdown = "text/markdown",
 }
 
 export enum SupportedLanguage {
@@ -19,5 +21,7 @@ export enum SupportedLanguage {
   HTML = "html",
   CSS = "css",
   JSON = "json",
-  Markdown = "markdown"
+  Markdown = "markdown",
 }
+
+export type MonacoEditor = Parameters<OnMount>[0];

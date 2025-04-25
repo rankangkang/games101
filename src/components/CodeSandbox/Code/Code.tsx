@@ -1,14 +1,16 @@
-import { useControllableValue } from "ahooks";
-import { memo, useState, useCallback } from "react";
-import { Editor } from "../Editor/Editor";
-import { FileTree } from "../FileTree/FileTree";
-import { classNames } from "../../utils/classNames";
-import { useMonacoInit } from "../Editor/useMonacoInit";
-import { FileModel, MimeType } from "../../types";
-import { mime2Lang } from "../../utils/ext";
-import { TabList } from "../TabList/TabList";
-import { Condition } from "../Condition/Condition";
-import { MDXRenderer } from "../MDXRender/MDXRender";
+import { useControllableValue, useMemoizedFn } from "ahooks";
+import { memo, useState, useMemo } from "react";
+import { FileTree } from "./FileTree";
+import { classNames } from "../../../utils/classNames";
+import { useMonacoInit } from "./useMonacoInit";
+import { FileModel, MimeType, SupportedLanguage } from "../../../types";
+import { mime2Lang } from "../../../utils/ext";
+import { TabList } from "./TabList";
+import { Condition } from "../../Condition/Condition";
+import { MDXRenderer } from "./MDXRender";
+import { OnMount } from "@monaco-editor/react";
+import { Editor, EditorProps } from "./MonacoEditor";
+
 export interface CodeProps {
   rootPath?: string;
   models?: FileModel[];
@@ -34,6 +36,8 @@ export const Code = memo(function Code(props: CodeProps) {
   const selectedModel = openedModels?.find(
     (model) => model.path === selectedModelPath
   );
+
+  const language = selectedModel ? mime2Lang(selectedModel.type) : undefined;
 
   const handleSelectModel = (path: string) => {
     setSelectedModelPath(path);
@@ -67,7 +71,7 @@ export const Code = memo(function Code(props: CodeProps) {
   };
 
   // Markdown 预览功能
-  const handlePreviewMarkdown = useCallback(() => {
+  const previewMarkdown = useMemoizedFn(() => {
     if (!selectedModel || selectedModel.type !== MimeType.Markdown) return;
 
     // 创建一个预览模型，使用相同的值，但添加 .preview 后缀
@@ -96,7 +100,13 @@ export const Code = memo(function Code(props: CodeProps) {
 
     // 选中新预览标签页
     setSelectedModelPath(previewPath);
-  }, [selectedModel, openedModels]);
+  });
+
+  const LangEditor = useMemo(
+    // 不同语言生成不同的 editor 实例
+    () => (language ? getLangEditor(language) : Editor),
+    [language]
+  );
 
   if (!monaco) {
     return null;
@@ -136,13 +146,27 @@ export const Code = memo(function Code(props: CodeProps) {
               return <MDXRenderer mdxString={value} />;
             }
 
+            const onMount: OnMount = (editor) => {
+              if (language === SupportedLanguage.Markdown) {
+                // 添加右键菜单项
+                editor.addAction({
+                  id: "preview-markdown",
+                  label: "Preview Markdown",
+                  contextMenuGroupId: "navigation",
+                  contextMenuOrder: 1.5,
+                  run: () => {
+                    previewMarkdown();
+                  },
+                });
+              }
+            };
+
             // 否则渲染编辑器
             return (
-              <Editor
+              <LangEditor
                 className={classNames("items-stretch flex-1")}
                 path={path}
                 value={value}
-                language={mime2Lang(type)}
                 onChange={(val) => {
                   setModels((models) => {
                     return models.map((model) => {
@@ -153,9 +177,8 @@ export const Code = memo(function Code(props: CodeProps) {
                     });
                   });
                 }}
-                onPreviewMarkdown={
-                  type === MimeType.Markdown ? handlePreviewMarkdown : undefined
-                }
+                readOnly={isPreview}
+                onMount={onMount}
               />
             );
           }}
@@ -164,3 +187,9 @@ export const Code = memo(function Code(props: CodeProps) {
     </div>
   );
 });
+
+function getLangEditor(language: SupportedLanguage) {
+  return (props: Omit<EditorProps, "language" | "defaultLanguage">) => (
+    <Editor {...props} language={language} defaultLanguage={language} />
+  );
+}

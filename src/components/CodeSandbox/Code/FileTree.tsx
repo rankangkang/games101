@@ -1,7 +1,7 @@
 import { memo, useCallback, useLayoutEffect, useMemo, useState } from "react";
-import { classNames } from "../../utils/classNames";
-import { FileModel } from "../../types";
-import { getFileIcon } from "../utils";
+import { classNames } from "../../../utils/classNames";
+import { FileModel } from "../../../types";
+import { getFileIcon } from "../../utils";
 
 interface FileTreeProps {
   rootPath?: string;

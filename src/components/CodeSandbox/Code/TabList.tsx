@@ -1,7 +1,7 @@
 import { memo } from "react";
-import { classNames } from "../../utils/classNames";
-import { FileModel } from "../../types";
-import { getFileIcon } from "../utils";
+import { classNames } from "../../../utils/classNames";
+import { FileModel } from "../../../types";
+import { getFileIcon } from "../../utils";
 
 export interface TabListProps {
   models: FileModel[];

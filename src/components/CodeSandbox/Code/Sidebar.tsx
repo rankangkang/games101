@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { classNames } from "../../utils/classNames";
-import { Condition } from "../Condition/Condition";
+import { classNames } from "../../../utils/classNames";
+import { Condition } from "../../Condition/Condition";
 import { SidebarConfig, MenuItem } from "./Sidebar.types";
 
 interface SidebarProps {

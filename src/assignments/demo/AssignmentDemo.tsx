@@ -1,4 +1,4 @@
-import { Playground } from "../../components/Playground/Playground";
+import { CodeSandbox } from "../../components/CodeSandbox/CodeSandbox";
 import html from "./index.html?raw";
 import js from "./main.js?raw";
 import readme from "./README.md?raw";
@@ -10,7 +10,7 @@ import { use } from "react";
 
 export function AssignmentDemo() {
   const models = use(modelsPromise);
-  return <Playground models={models} baseUrl={baseUrl} />;
+  return <CodeSandbox models={models} baseUrl={baseUrl} />;
 }
 
 const baseUrl = join(ASSIGNMENTS_BASE_PREFIX, "demo");
