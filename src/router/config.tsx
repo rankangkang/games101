@@ -1,4 +1,4 @@
-import { Outlet, RouteObject } from "react-router-dom";
+import { Outlet, RouteObject, Navigate } from "react-router-dom";
 import { AssignmentDemo } from "../assignments/demo/AssignmentDemo";
 import { Assignment01 } from "../assignments/01/Assignment01";
 
@@ -17,10 +17,10 @@ export type RouteConfig = RouteObject & {
 export const routeConfig: RouteConfig[] = [
   {
     path: "/",
+    element: <Navigate to="/assignments" replace />,
     meta: {
       showInSidebar: false,
     },
-    index: true,
   },
   {
     path: "/assignments",
@@ -32,6 +32,13 @@ export const routeConfig: RouteConfig[] = [
       showInSidebar: true,
     },
     children: [
+      {
+        index: true,
+        element: <AssignmentDemo />,
+        meta: {
+          showInSidebar: false,
+        },
+      },
       {
         path: "demo",
         element: <AssignmentDemo />,

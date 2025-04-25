@@ -86,7 +86,7 @@ export function Playground(props: PlaygroundProps) {
       <Panel
         ref={editorPanelRef}
         defaultSize={50}
-        minSize={20}
+        minSize={0}
         className="w-full h-full border border-[#343434] rounded-sm shadow-lg"
       >
         <Code
@@ -108,7 +108,7 @@ export function Playground(props: PlaygroundProps) {
       <Panel
         ref={previewPanelRef}
         defaultSize={50}
-        minSize={20}
+        minSize={0}
         className="w-full h-full border border-[#343434] rounded-sm shadow-lg"
       >
         <Sandbox ref={sandboxRef} html={entry} />

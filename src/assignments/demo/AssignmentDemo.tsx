@@ -1,6 +1,7 @@
 import { Playground } from "../../components/Playground/Playground";
 import html from "./index.html?raw";
 import js from "./main.js?raw";
+import readme from "./README.md?raw";
 import { FileModel, MimeType } from "../../types";
 import { syncFileModels } from "../../db";
 import { join } from "../../utils/path";
@@ -25,6 +26,12 @@ const defaultModels: FileModel[] = [
     type: MimeType.JavaScript,
     value: js,
     path: "main.js",
+    baseUrl,
+  },
+  {
+    type: MimeType.Markdown,
+    value: readme,
+    path: "README.md",
     baseUrl,
   },
 ];

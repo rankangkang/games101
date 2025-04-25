@@ -1,14 +1,14 @@
 import { useControllableValue } from "ahooks";
-import { memo, useState } from "react";
+import { memo, useState, useCallback } from "react";
 import { Editor } from "../Editor/Editor";
 import { FileTree } from "../FileTree/FileTree";
 import { classNames } from "../../utils/classNames";
 import { useMonacoInit } from "../Editor/useMonacoInit";
-import { FileModel } from "../../types";
+import { FileModel, MimeType } from "../../types";
 import { mime2Lang } from "../../utils/ext";
 import { TabList } from "../TabList/TabList";
 import { Condition } from "../Condition/Condition";
-
+import { MDXRenderer } from "../MDXRender/MDXRender";
 export interface CodeProps {
   rootPath?: string;
   models?: FileModel[];
@@ -27,12 +27,11 @@ export const Code = memo(function Code(props: CodeProps) {
   });
 
   const [selectedModelPath, setSelectedModelPath] = useState<string>("");
-
   const [openedModels, setOpenedModels] = useState<FileModel[]>([]);
 
   const monaco = useMonacoInit();
 
-  const selectedModel = models?.find(
+  const selectedModel = openedModels?.find(
     (model) => model.path === selectedModelPath
   );
 
@@ -67,6 +66,38 @@ export const Code = memo(function Code(props: CodeProps) {
     setOpenedModels((opened) => opened.filter((model) => model.path !== path));
   };
 
+  // Markdown 预览功能
+  const handlePreviewMarkdown = useCallback(() => {
+    if (!selectedModel || selectedModel.type !== MimeType.Markdown) return;
+
+    // 创建一个预览模型，使用相同的值，但添加 .preview 后缀
+    const previewPath = `${selectedModel.path}.preview`;
+
+    // 检查是否已经存在预览 tab
+    const existingPreview = openedModels.find(
+      (model) => model.path === previewPath
+    );
+    if (existingPreview) {
+      // 如果已经存在，直接选择它
+      setSelectedModelPath(previewPath);
+      return;
+    }
+
+    // 创建预览模型
+    const previewModel: FileModel = {
+      path: previewPath,
+      value: selectedModel.value,
+      type: MimeType.Markdown,
+      baseUrl: selectedModel.baseUrl,
+    };
+
+    // 添加到打开的标签页中
+    setOpenedModels((prev) => [...prev, previewModel]);
+
+    // 选中新预览标签页
+    setSelectedModelPath(previewPath);
+  }, [selectedModel, openedModels]);
+
   if (!monaco) {
     return null;
   }
@@ -96,6 +127,16 @@ export const Code = memo(function Code(props: CodeProps) {
         <Condition if={selectedModel}>
           {() => {
             const { path, value, type } = selectedModel!;
+
+            // 检查是否是预览模式
+            const isPreview = path.endsWith(".preview");
+
+            // 如果是 Markdown 预览模式，渲染预览视图
+            if (type === MimeType.Markdown && isPreview) {
+              return <MDXRenderer mdxString={value} />;
+            }
+
+            // 否则渲染编辑器
             return (
               <Editor
                 className={classNames("items-stretch flex-1")}
@@ -112,6 +153,9 @@ export const Code = memo(function Code(props: CodeProps) {
                     });
                   });
                 }}
+                onPreviewMarkdown={
+                  type === MimeType.Markdown ? handlePreviewMarkdown : undefined
+                }
               />
             );
           }}

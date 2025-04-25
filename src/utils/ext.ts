@@ -20,6 +20,8 @@ export function mime2Lang(mime: MimeType): SupportedLanguage | undefined {
     case MimeType.ImportMap:
     case MimeType.JSON:
       return SupportedLanguage.JSON;
+    case MimeType.Markdown:
+      return SupportedLanguage.Markdown;
     default:
       return undefined;
   }

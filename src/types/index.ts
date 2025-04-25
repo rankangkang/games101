@@ -11,6 +11,7 @@ export enum MimeType {
   CSS = "text/css",
   ImportMap = "application/importmap+json",
   JSON = "application/json",
+  Markdown = "text/markdown"
 }
 
 export enum SupportedLanguage {
@@ -18,4 +19,5 @@ export enum SupportedLanguage {
   HTML = "html",
   CSS = "css",
   JSON = "json",
+  Markdown = "markdown"
 }
