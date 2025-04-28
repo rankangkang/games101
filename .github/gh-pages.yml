@@ -33,7 +33,7 @@ jobs:
       - name: deploy with gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAGES }}
-          STATIC_PATH: storybook-static
+          STATIC_PATH: dist
           BRANCH: gh-pages
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
