@@ -29,6 +29,7 @@ jobs:
       - name: build-static
         run: |
           pnpm build
+          # copy index.html to 404.html for github pages 404 matching
           cp dist/index.html dist/404.html
 
       - name: deploy with gh-pages
