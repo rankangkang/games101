@@ -1,11 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
 import mdx from '@mdx-js/rollup'
 import tailwindcss from '@tailwindcss/vite'
-import { resolve } from 'path'
+import react from '@vitejs/plugin-react'
 import { buildSync } from 'esbuild'
-import type { ViteDevServer } from 'vite'
 import type { IncomingMessage, ServerResponse } from 'http'
+import { resolve } from 'path'
+import type { ViteDevServer } from 'vite'
+import { defineConfig } from 'vite'
+
+import { ROUTE_BASE_NAME } from './src/config'
 
 // Service Worker 插件
 const swPlugin = {
@@ -45,5 +47,7 @@ const swPlugin = {
 
 // https://vite.dev/config/
 export default defineConfig({
+  // 设置 base 路径
+  base: ROUTE_BASE_NAME,
   plugins: [{ enforce: 'pre', ...mdx({}) }, react(), tailwindcss(), swPlugin],
 })

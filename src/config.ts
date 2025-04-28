@@ -8,3 +8,5 @@ export const IDB_OPTIONS: IDBOptions = {
   storeName: 'games101_assignments_storage',
   version: 1,
 }
+
+export const ROUTE_BASE_NAME = '/games101'
