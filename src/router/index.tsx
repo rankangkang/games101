@@ -1,9 +1,9 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-import { routeConfig } from "./config";
+import { routeConfig } from './config'
 
-const router = createBrowserRouter(routeConfig);
+const router = createBrowserRouter(routeConfig)
 
 export function Router() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />
 }

@@ -1,14 +1,14 @@
-import { ReactNode } from "react";
+import type { ReactNode } from 'react'
 
 export const Condition = (props: {
-  if: unknown;
-  children: React.ReactNode | (() => ReactNode);
+  if: unknown
+  children: React.ReactNode | (() => ReactNode)
 }) => {
-  const { if: condition, children } = props;
+  const { if: condition, children } = props
 
   if (condition) {
-    return typeof children === "function" ? children() : children;
+    return typeof children === 'function' ? children() : children
   }
 
-  return null;
-};
+  return null
+}

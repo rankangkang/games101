@@ -8,12 +8,12 @@
 
 import { join } from 'node:path'
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import process from 'node:process'
 
 // node scripts/generate-assignment.mjs 01
 const assignmentName = process.argv[2]
 if (!assignmentName) {
-  console.error('🚨 Assignment name is required')
-  process.exit(1)
+  throw new Error('🚨 Assignment name is required')
 }
 
 const assignmentsDir = join(process.cwd(), 'src', 'assignments')
@@ -26,21 +26,21 @@ if (existsSync(assignmentDir)) {
   console.log(`✅ ${assignmentDir} created`)
 }
 
-
 function writeFile(fileName, content) {
   const filePath = join(assignmentDir, fileName)
   writeFileSync(filePath, content)
   console.log(`✅ ${filePath} created`)
 }
 
+// eslint-disable-next-line no-extend-native
 String.prototype.toFirstUpper = function () {
   return this.charAt(0).toUpperCase() + this.slice(1)
 }
 
-const readme = /* markdown */`# Assignment ${assignmentName}
+const readme = /* markdown */ `# Assignment ${assignmentName}
 `
 
-const html = /* html */`<!DOCTYPE html>
+const html = /* html */ `<!DOCTYPE html>
 <html>
 
 <head>
@@ -69,7 +69,7 @@ const html = /* html */`<!DOCTYPE html>
 </html>
 `
 
-const js = /* js */`import {} from 'three';
+const js = /* js */ `import {} from 'three';
 
 function main() {
   console.log('Hello, world!')
@@ -78,9 +78,7 @@ function main() {
 main()
 `
 
-
-
-const tsx = /* tsx */`import { CodeSandbox } from "../../components/CodeSandbox/CodeSandbox";
+const tsx = /* tsx */ `import { CodeSandbox } from "../../components/CodeSandbox/CodeSandbox";
 import html from "./index.html?raw";
 import js from "./main.js?raw";
 import readme from "./README.md?raw";

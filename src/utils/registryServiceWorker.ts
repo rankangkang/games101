@@ -1,15 +1,15 @@
 export function registryServiceWorker(path: string) {
-  if ("serviceWorker" in navigator) {
+  if ('serviceWorker' in navigator) {
     return navigator.serviceWorker
       .register(path, {
-        scope: "/",
+        scope: '/',
       })
       .then((registration) => {
-        console.log("ServiceWorker registered", registration.scope);
+        console.log('ServiceWorker registered', registration.scope)
       })
       .catch((error) => {
-        console.log("ServiceWorker registration failed", error);
-      });
+        console.log('ServiceWorker registration failed', error)
+      })
   }
-  return Promise.resolve();
+  return Promise.resolve()
 }

@@ -1,34 +1,35 @@
-import { Outlet, RouteObject, Navigate } from "react-router-dom";
-import { AssignmentDemo } from "../assignments/demo/AssignmentDemo";
-import { Assignment00 } from "../assignments/00/Assignment00";
+import type { RouteObject } from 'react-router-dom'
+import { Outlet, Navigate } from 'react-router-dom'
+import { AssignmentDemo } from '../assignments/demo/AssignmentDemo'
+import { Assignment00 } from '../assignments/00/Assignment00'
 
 interface RouteMetadata {
-  title?: string;
-  icon?: React.ReactNode;
-  position?: "top" | "bottom";
-  showInSidebar?: boolean;
+  title?: string
+  icon?: React.ReactNode
+  position?: 'top' | 'bottom'
+  showInSidebar?: boolean
 }
 
 export type RouteConfig = RouteObject & {
-  meta?: RouteMetadata;
-  children?: RouteConfig[];
-};
+  meta?: RouteMetadata
+  children?: RouteConfig[]
+}
 
 export const routeConfig: RouteConfig[] = [
   {
-    path: "/",
+    path: '/',
     element: <Navigate to="/assignments" replace />,
     meta: {
       showInSidebar: false,
     },
   },
   {
-    path: "/assignments",
+    path: '/assignments',
     element: <Outlet />,
     meta: {
-      title: "Assignments",
-      icon: "☰",
-      position: "bottom",
+      title: 'Assignments',
+      icon: '☰',
+      position: 'bottom',
       showInSidebar: true,
     },
     children: [
@@ -40,21 +41,21 @@ export const routeConfig: RouteConfig[] = [
         },
       },
       {
-        path: "demo",
+        path: 'demo',
         element: <AssignmentDemo />,
         meta: {
-          title: "Demo Assignment",
+          title: 'Demo Assignment',
           showInSidebar: true,
         },
       },
       {
-        path: "00",
+        path: '00',
         element: <Assignment00 />,
         meta: {
-          title: "Assignment 0",
+          title: 'Assignment 0',
           showInSidebar: true,
         },
       },
     ],
   },
-];
+]

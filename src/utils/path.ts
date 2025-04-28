@@ -4,5 +4,5 @@
  * @returns 完整的 URL
  */
 export function join(...paths: (string | undefined | null)[]) {
-  return paths.filter(Boolean).join("/").replace(/\/+/g, "/");
+  return paths.filter(Boolean).join('/').replace(/\/+/g, '/')
 }

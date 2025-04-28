@@ -1,37 +1,31 @@
-type ClassName =
-  | string
-  | undefined
-  | null
-  | boolean
-  | Record<string, boolean>
-  | ClassName[];
+type ClassName = string | undefined | null | boolean | Record<string, boolean> | ClassName[]
 
 export function classNames(...classes: ClassName[]) {
-  const classNameList: string[] = [];
+  const classNameList: string[] = []
 
   classes.forEach((item) => {
     if (item) {
-      if (typeof item === "string") {
+      if (typeof item === 'string') {
         if (!classNameList.includes(item)) {
-          classNameList.push(item);
+          classNameList.push(item)
         }
       } else if (Array.isArray(item)) {
         classNames(...item)
-          .split(" ")
+          .split(' ')
           .forEach((className) => {
             if (!classNameList.includes(className)) {
-              classNameList.push(className);
+              classNameList.push(className)
             }
-          });
-      } else if (typeof item === "object") {
+          })
+      } else if (typeof item === 'object') {
         Object.entries(item).forEach(([key, value]) => {
           if (value && !classNameList.includes(key)) {
-            classNameList.push(key);
+            classNameList.push(key)
           }
-        });
+        })
       }
     }
-  });
+  })
 
-  return classNameList.join(" ");
+  return classNameList.join(' ')
 }

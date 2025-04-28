@@ -1,22 +1,23 @@
-import { memo } from "react";
-import Monaco, { OnChange, OnMount } from "@monaco-editor/react";
-import { classNames } from "../../../utils/classNames";
-import { SupportedLanguage } from "../../../types";
+import { memo } from 'react'
+import type { OnChange, OnMount } from '@monaco-editor/react'
+import Monaco from '@monaco-editor/react'
+import { classNames } from '../../../utils/classNames'
+import type { SupportedLanguage } from '../../../types'
 
 export interface EditorProps {
-  defaultValue?: string;
-  path?: string;
-  value?: string;
-  onChange?: OnChange;
+  defaultValue?: string
+  path?: string
+  value?: string
+  onChange?: OnChange
 
-  language?: SupportedLanguage;
-  defaultLanguage?: SupportedLanguage;
-  readOnly?: boolean;
+  language?: SupportedLanguage
+  defaultLanguage?: SupportedLanguage
+  readOnly?: boolean
 
-  className?: string;
-  style?: React.CSSProperties;
+  className?: string
+  style?: React.CSSProperties
 
-  onMount?: OnMount;
+  onMount?: OnMount
 }
 
 export const Editor = memo(function Editor(props: EditorProps) {
@@ -27,11 +28,11 @@ export const Editor = memo(function Editor(props: EditorProps) {
     className,
     style,
     path,
-    language = "javascript",
+    language = 'javascript',
     defaultLanguage = language,
     readOnly = false,
     onMount,
-  } = props;
+  } = props
 
   return (
     <div className={classNames(className)} style={style}>
@@ -51,5 +52,5 @@ export const Editor = memo(function Editor(props: EditorProps) {
         onMount={onMount}
       />
     </div>
-  );
-});
+  )
+})

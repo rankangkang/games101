@@ -1,5 +1,5 @@
 // 齐次坐标变换
-import { Matrix3, Euler, Vector3 } from 'three';
+import { Matrix3, Vector3 } from 'three'
 
 function main() {
   const root = document.getElementById('root')
@@ -19,9 +19,9 @@ function main() {
 }
 
 /**
- * @param {[number, number]} point 
- * @param {number} rotate 
- * @param {[number, number]} translate 
+ * @param {[number, number]} point
+ * @param {number} rotate
+ * @param {[number, number]} translate
  */
 function transformPoint(point, rotate, translate) {
   const [x, y] = point
@@ -30,15 +30,11 @@ function transformPoint(point, rotate, translate) {
   const origin = new Vector3(x, y, 1)
   const transformMatrix = new Matrix3()
 
-  const rotateAngle = rotate * Math.PI / 180
+  const rotateAngle = (rotate * Math.PI) / 180
   const cos = Math.cos(rotateAngle)
   const sin = Math.sin(rotateAngle)
 
-  transformMatrix.set(
-    cos, -sin, tx,
-    sin, cos, ty,
-    0, 0, 1,
-  )
+  transformMatrix.set(cos, -sin, tx, sin, cos, ty, 0, 0, 1)
 
   const transformed = origin.applyMatrix3(transformMatrix)
 

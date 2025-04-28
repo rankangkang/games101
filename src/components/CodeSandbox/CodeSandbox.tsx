@@ -1,85 +1,82 @@
 // 组合 编辑器 和 游戏
-import { useMemo, useRef, useState } from "react";
-import { Code } from "./Code/Code";
-import { idb } from "../../db";
-import { join } from "../../utils/path";
-import { FileModel, MimeType } from "../../types";
-import Sandbox from "./Sandbox/Sandbox";
-import {
-  Panel,
-  PanelGroup,
-  PanelResizeHandle,
-  ImperativePanelHandle,
-} from "react-resizable-panels";
-import { Sidebar } from "./Code/Sidebar";
-import { getSidebarConfig } from "../../router/sidebarConfig";
-import { useMemoizedFn } from "ahooks";
+import { useMemo, useRef, useState } from 'react'
+import { Code } from './Code/Code'
+import { idb } from '../../db'
+import { join } from '../../utils/path'
+import type { FileModel } from '../../types'
+import { MimeType } from '../../types'
+import Sandbox from './Sandbox/Sandbox'
+import type { ImperativePanelHandle } from 'react-resizable-panels'
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
+import { Sidebar } from './Code/Sidebar'
+import { getSidebarConfig } from '../../router/sidebarConfig'
+import { useMemoizedFn } from 'ahooks'
 
 export interface CodeSandboxProps {
-  baseUrl?: string;
-  models: FileModel[];
+  baseUrl?: string
+  models: FileModel[]
 }
 
 export function CodeSandbox(props: CodeSandboxProps) {
-  const { models: initialModels, baseUrl = "" } = props;
+  const { models: initialModels, baseUrl = '' } = props
 
   // 存储中间态，点击运行时，将中间态存储到 idb，然后更新 sandbox
-  const [models, setModels] = useState<FileModel[]>(initialModels);
+  const [models, setModels] = useState<FileModel[]>(initialModels)
 
   const [entry, setEntry] = useState<string | undefined>(
-    models.find((model) => model?.type === MimeType.HTML)?.value
-  );
+    models.find((model) => model?.type === MimeType.HTML)?.value,
+  )
 
   const sandboxRef = useRef<{ forceUpdate: () => void }>({
     forceUpdate: () => {},
-  });
+  })
 
-  const previewPanelRef = useRef<ImperativePanelHandle>(null);
-  const editorPanelRef = useRef<ImperativePanelHandle>(null);
-  const [treePanelVisible, setTreePanelVisible] = useState(false);
+  const previewPanelRef = useRef<ImperativePanelHandle>(null)
+  const editorPanelRef = useRef<ImperativePanelHandle>(null)
+  const [treePanelVisible, setTreePanelVisible] = useState(true)
 
   const handleRun = useMemoizedFn(async () => {
     // 更新 sandbox 内容
-    const html = models.find((model) => model.type === MimeType.HTML)?.value;
-    setEntry(html);
-    sandboxRef.current.forceUpdate();
-  });
+    const html = models.find((model) => model.type === MimeType.HTML)?.value
+    setEntry(html)
+    sandboxRef.current.forceUpdate()
+  })
 
   const handleSave = useMemoizedFn(async (nextModels: FileModel[]) => {
     const promises = nextModels.map((model) => {
-      const key = join(baseUrl, model.path);
-      return idb.setFileModel(key, model);
-    });
-    await Promise.all(promises);
-    setModels(nextModels);
-  });
+      const key = join(baseUrl, model.path)
+      return idb.setFileModel(key, model)
+    })
+    await Promise.all(promises)
+    setModels(nextModels)
+  })
 
   const sidebarConfig = useMemo(() => {
-    const config = getSidebarConfig();
+    const config = getSidebarConfig()
     config.top.unshift(
       {
-        id: "project",
-        title: "Project",
-        icon: "🗂️",
+        id: 'project',
+        title: 'Project',
+        icon: '🗂️',
         onClick: () => {
-          setTreePanelVisible((prev) => !prev);
+          setTreePanelVisible((prev) => !prev)
         },
       },
       {
-        id: "run",
-        title: "Run",
-        icon: "▶️",
+        id: 'run',
+        title: 'Run',
+        icon: '▶️',
         onClick: handleRun,
       },
       {
-        id: "save",
-        title: "Save",
-        icon: "💾",
+        id: 'save',
+        title: 'Save',
+        icon: '💾',
         onClick: () => handleSave(models),
-      }
-    );
-    return config;
-  }, [models, handleRun, handleSave]);
+      },
+    )
+    return config
+  }, [models, handleRun, handleSave])
 
   return (
     <PanelGroup direction="horizontal" className="w-full h-full">
@@ -96,7 +93,7 @@ export function CodeSandbox(props: CodeSandboxProps) {
           onModelChange={handleSave}
           treeVisible={treePanelVisible}
           sidebar={() => {
-            return <Sidebar config={sidebarConfig} />;
+            return <Sidebar config={sidebarConfig} />
           }}
         />
       </Panel>
@@ -114,5 +111,5 @@ export function CodeSandbox(props: CodeSandboxProps) {
         <Sandbox ref={sandboxRef} html={entry} />
       </Panel>
     </PanelGroup>
-  );
+  )
 }
