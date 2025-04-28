@@ -1,7 +1,8 @@
 import { IDB_OPTIONS } from '../config'
 import type { FileModel } from '../types'
-import { IDBStore } from './idb'
 import { join } from '../utils/path'
+import { IDBStore } from './idb'
+
 export const idb = new IDBStore(IDB_OPTIONS)
 
 /**

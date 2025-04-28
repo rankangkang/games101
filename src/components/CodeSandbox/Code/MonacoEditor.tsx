@@ -1,8 +1,8 @@
-import { memo } from 'react'
 import type { OnChange, OnMount } from '@monaco-editor/react'
 import Monaco from '@monaco-editor/react'
-import { classNames } from '../../../utils/classNames'
+import { memo } from 'react'
 import type { SupportedLanguage } from '../../../types'
+import { classNames } from '../../../utils/classNames'
 
 export interface EditorProps {
   defaultValue?: string

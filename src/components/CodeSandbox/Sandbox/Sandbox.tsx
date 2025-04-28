@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useRef, useMemo, useReducer, useImperativeHandle } from 'react'
+import { useImperativeHandle, useMemo, useReducer, useRef } from 'react'
 interface SandboxProps {
   ref?: React.RefObject<SandboxRef>
   html?: string
