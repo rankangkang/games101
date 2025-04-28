@@ -1,11 +1,12 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
 import mdx from '@mdx-js/rollup'
 import tailwindcss from '@tailwindcss/vite'
-import { resolve } from 'path'
+import react from '@vitejs/plugin-react'
 import { buildSync } from 'esbuild'
-import type { ViteDevServer } from 'vite'
 import type { IncomingMessage, ServerResponse } from 'http'
+import { resolve } from 'path'
+import type { ViteDevServer } from 'vite'
+import { defineConfig } from 'vite'
+import { ROUTE_BASE_NAME, SERVICE_WORKER_PATH } from './src/config'
 
 // Service Worker 插件
 const swPlugin = {
@@ -13,7 +14,7 @@ const swPlugin = {
   configureServer(server: ViteDevServer) {
     // 开发服务器中间件
     server.middlewares.use((req: IncomingMessage, res: ServerResponse, next: () => void) => {
-      if (req.url === '/sw.js') {
+      if (req.url === SERVICE_WORKER_PATH) {
         // 编译 Service Worker
         const result = buildSync({
           minify: false,
@@ -45,5 +46,7 @@ const swPlugin = {
 
 // https://vite.dev/config/
 export default defineConfig({
+  // 设置 base 路径
+  base: ROUTE_BASE_NAME,
   plugins: [{ enforce: 'pre', ...mdx({}) }, react(), tailwindcss(), swPlugin],
 })

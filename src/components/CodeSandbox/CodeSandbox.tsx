@@ -1,16 +1,16 @@
 // 组合 编辑器 和 游戏
+import { useMemoizedFn } from 'ahooks'
 import { useMemo, useRef, useState } from 'react'
-import { Code } from './Code/Code'
-import { idb } from '../../db'
-import { join } from '../../utils/path'
-import type { FileModel } from '../../types'
-import { MimeType } from '../../types'
-import Sandbox from './Sandbox/Sandbox'
 import type { ImperativePanelHandle } from 'react-resizable-panels'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
-import { Sidebar } from './Code/Sidebar'
+import { idb } from '../../db'
 import { getSidebarConfig } from '../../router/sidebarConfig'
-import { useMemoizedFn } from 'ahooks'
+import type { FileModel } from '../../types'
+import { MimeType } from '../../types'
+import { join } from '../../utils/path'
+import { Code } from './Code/Code'
+import { Sidebar } from './Code/Sidebar'
+import Sandbox from './Sandbox/Sandbox'
 
 export interface CodeSandboxProps {
   baseUrl?: string

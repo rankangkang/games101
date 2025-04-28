@@ -1,5 +1,5 @@
-import { join } from '../../../utils/path'
 import type { FileModel } from '../../../types'
+import { join } from '../../../utils/path'
 
 export function generateImportMap(importMapScripts: FileModel[]) {
   const importList = importMapScripts.map((script) => ({

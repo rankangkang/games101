@@ -1,8 +1,8 @@
-export function registryServiceWorker(path: string) {
+export function registryServiceWorker(path: string, scope: string = '/') {
   if ('serviceWorker' in navigator) {
     return navigator.serviceWorker
       .register(path, {
-        scope: '/',
+        scope,
       })
       .then((registration) => {
         console.log('ServiceWorker registered', registration.scope)

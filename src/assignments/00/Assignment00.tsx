@@ -1,13 +1,14 @@
+import { use } from 'react'
 import { CodeSandbox } from '../../components/CodeSandbox/CodeSandbox'
+import { ASSIGNMENTS_BASE_PREFIX } from '../../config'
+import { syncFileModels } from '../../db'
+import type { FileModel } from '../../types'
+import { MimeType } from '../../types'
+import { join } from '../../utils/path'
+import { replaceVariables } from '../../utils/replace'
 import html from './index.html?raw'
 import js from './main.js?raw'
 import readme from './README.md?raw'
-import type { FileModel } from '../../types'
-import { MimeType } from '../../types'
-import { syncFileModels } from '../../db'
-import { join } from '../../utils/path'
-import { ASSIGNMENTS_BASE_PREFIX } from '../../config'
-import { use } from 'react'
 
 export function Assignment00() {
   const models = use(modelsPromise)
@@ -16,10 +17,14 @@ export function Assignment00() {
 
 const baseUrl = join(ASSIGNMENTS_BASE_PREFIX, '00')
 
+const entryHtml = replaceVariables(html, {
+  main: join(baseUrl, 'main.js'),
+})
+
 const defaultModels: FileModel[] = [
   {
     type: MimeType.HTML,
-    value: html,
+    value: entryHtml,
     path: 'index.html',
     baseUrl,
   },
