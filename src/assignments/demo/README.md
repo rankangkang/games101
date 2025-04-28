@@ -1,3 +1,0 @@
-# README First!
-
-Hello World!
