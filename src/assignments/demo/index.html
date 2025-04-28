@@ -1,27 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
-  <title>Demo</title>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://esm.sh/three@0.175.0",
-        "three/": "https://esm.sh/three@0.175.0/"
+  <head>
+    <title>Demo</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://esm.sh/three@0.175.0",
+          "three/": "https://esm.sh/three@0.175.0/"
+        }
       }
-    }
-  </script>
-</head>
+    </script>
+  </head>
 
-<body>
-  <div id="game-container"></div>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-  </style>
-  <script type="module" src="/_assignments/demo/main.js"></script>
-</body>
-
+  <body>
+    <div id="game-container"></div>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script type="module" src="{{ main }}"></script>
+  </body>
 </html>

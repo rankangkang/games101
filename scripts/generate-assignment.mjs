@@ -6,8 +6,8 @@
  * 5. 生成示例 main.js
  */
 
-import { join } from 'node:path'
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 import process from 'node:process'
 
 // node scripts/generate-assignment.mjs 01
@@ -62,8 +62,8 @@ const html = /* html */ `<!DOCTYPE html>
       margin: 0;
       padding: 0;
     }
-  </style>
-  <script type="module" src="/_assignments/${assignmentName}/main.js"></script>
+    </style>
+    <script type="module" src="{{ main }}"></script>
 </body>
 
 </html>
@@ -95,26 +95,30 @@ export function Assignment${assignmentName.toFirstUpper()}() {
 
 const baseUrl = join(ASSIGNMENTS_BASE_PREFIX, "${assignmentName}");
 
+const entryHtml = replaceVariables(html, {
+  main: join(baseUrl, 'main.js'),
+})
+
 const defaultModels: FileModel[] = [
   {
     type: MimeType.HTML,
-    value: html,
-    path: "index.html",
+    value: entryHtml,
+    path: 'index.html',
     baseUrl,
   },
   {
     type: MimeType.JavaScript,
     value: js,
-    path: "main.js",
+    path: 'main.js',
     baseUrl,
   },
   {
     type: MimeType.Markdown,
     value: readme,
-    path: "README.md",
+    path: 'README.md',
     baseUrl,
   },
-];
+]
 
 const modelsPromise = syncFileModels(defaultModels);
 
