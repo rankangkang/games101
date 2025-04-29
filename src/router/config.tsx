@@ -1,7 +1,8 @@
 import type { RouteObject } from 'react-router-dom'
-import { Outlet, Navigate } from 'react-router-dom'
-import { AssignmentDemo } from '../assignments/demo/AssignmentDemo'
+import { Navigate, Outlet } from 'react-router-dom'
 import { Assignment00 } from '../assignments/00/Assignment00'
+import { Assignment01 } from '../assignments/01/Assignment01'
+import { AssignmentDemo } from '../assignments/demo/AssignmentDemo'
 
 interface RouteMetadata {
   title?: string
@@ -53,6 +54,14 @@ export const routeConfig: RouteConfig[] = [
         element: <Assignment00 />,
         meta: {
           title: 'Assignment 0',
+          showInSidebar: true,
+        },
+      },
+      {
+        path: '01',
+        element: <Assignment01 />,
+        meta: {
+          title: 'Assignment 1',
           showInSidebar: true,
         },
       },
