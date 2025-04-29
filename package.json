@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b && vite build",
-    "dev": "vite",
+    "dev": "vite --host",
     "gen:assignment": "node scripts/generate-assignment.mjs",
     "lint": "eslint . --fix --ignore-pattern '**/dist/**' --ignore-pattern '**/node_modules/**'",
     "prepare": "simple-git-hooks",
